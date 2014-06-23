@@ -44,11 +44,9 @@ function sendEmail(emailBody) {
 
 function sendText(textBody) {
   client.sendMessage({
-
       to:'+16515556677',
-      from: '+14506667788',
+      from: '+18304694806',
       body: textBody
-
   }, function(error, response) {
       if (!error) {
         console.log(error);
