@@ -7,15 +7,15 @@ var nodemailer = require("nodemailer"),
 var smtpTransport = nodemailer.createTransport("SMTP",{
   service: "Gmail",
   auth: {
-      user: process.env.gmailUsername,
-      pass: process.env.gmailPassword
+      user: process.env.GMAIL_USERNAME,
+      pass: process.env.GMAIL_PASSWORD
   }
 });
 
 // Settings or twilio clinet
 // Account SID and Auth Token are stored as enviromental variables
 // so they don't get checked into code
-var client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+var client = require('twilio')(process.env.TWILIO_AUTH_TOKEN, process.env.TWILIO_SID);
 
 
 
