@@ -10,6 +10,7 @@ var config = require('./config'),
 
 var app = express();
     app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded());
 
 // Settings or twilio clinet
 // Account SID and Auth Token are stored as enviromental variables
@@ -22,13 +23,15 @@ var client = twilio(config.twilio.auth_token, config.twilio.sid);
 var smtpTransport = nodemailer.createTransport('SMTP',{
   service: 'Gmail',
   auth: {
-    user: config.gmail.user,
+    user: config.gmail.username,
     pass: config.gmail.password
   }
 });
 
 
 function sendEmail(destination, body) {
+  console.log("Sending to %s", destination);
+  console.log(body);
   // This would returns todays Month, appends a / and then appends the date
   // Output would be 5/22
   var structured_date = new Date().getMonth() + '/' + new Date().getDate();
@@ -50,15 +53,19 @@ function sendEmail(destination, body) {
   });
 }
 
+app.get('/', function (req, res) {
+  res.send('This is Felix');
+});
 
 app.post('/message', function(req, res){
   var user = _.findWhere(users, {
-    phone_number: req.phone
+    phone_number: req.body.From
   });
   if (!user) {
     res.json({success: false, message: 'User not found'});
   } else {
-    user.messages.push(res.body);
+    user.messages.push(req.body.Body);
+    console.log("Succesful push for %s to %s", user.email, req.body.Body);
     res.json({success: true});
   }
 });
@@ -78,6 +85,17 @@ users.forEach(createCron);
 
 function createCron(user) {
   new CronJob(user.cron, function () {
-    sendEmail(user.messages);
+    if (!_.isEmpty(user.messages)) {
+      sendEmail(user.email, format(user));
+    }
   }, null, true);
+}
+
+
+function format(user) {
+  var body = 'Hi ' + user.first_name + ', here are your todo items! \n\n';
+  user.messages.forEach(function(message){
+    body+='[] - '+ message +' \n'
+  });
+  return body;
 }
