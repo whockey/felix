@@ -9,8 +9,7 @@ var config = require('./config'),
     users = require('./users');
 
 var app = express();
-    app.use(bodyParser());
-    app.use(app.router);
+    app.use(bodyParser.json());
 
 // Settings or twilio clinet
 // Account SID and Auth Token are stored as enviromental variables
@@ -23,8 +22,8 @@ var client = twilio(config.twilio.auth_token, config.twilio.sid);
 var smtpTransport = nodemailer.createTransport('SMTP',{
   service: 'Gmail',
   auth: {
-    user: config.email.user,
-    pass: config.email.password
+    user: config.gmail.user,
+    pass: config.gmail.password
   }
 });
 
@@ -71,7 +70,9 @@ app.post('./user', function(req, res){
     ' Let\'s hope its in the right format!'});
 });
 
-app.listen(3000);
+app.listen(3000, function () {
+  console.log("Hello world this is Felix.");
+});
 //On startup create a cron job for each new user
 users.forEach(createCron);
 
