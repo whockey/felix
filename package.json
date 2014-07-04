@@ -1,0 +1,14 @@
+{
+  "name": "felix",
+  "description": "Keep yo notes simple",
+  "author": "William Hockey <williamrhoceky@gmail.com>, Peter Pelberg, Trent Boorman",
+  "dependencies": {
+    "body-parser": "1.4.x",
+    "cron": "1.0.x",
+    "express": "4.4.x",
+    "nodemailer": "0.7.x",
+    "twilio": "1.6.x",
+    "underscore": "1.6.x"
+  },
+  "engine": "node >= 0.9.0"
+}
